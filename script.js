@@ -105,7 +105,7 @@ contactModal.addEventListener('click', (e) => {
 
 
 
-// PawaPay Payment Logic (Simulation)
+// Payment Logic (Backend API Call)
 const pawapayBtns = document.querySelectorAll('.pawapay-btn');
 const pawapayModal = document.getElementById('pawapayModal');
 const pawapayMessage = document.getElementById('pawapayMessage');
@@ -116,20 +116,45 @@ pawapayBtns.forEach(btn => {
         const amount = btn.getAttribute('data-amount');
         const product = btn.getAttribute('data-product');
         
+        // Ask user for phone number to mock Mobile Money payment
+        const phone = prompt("Entrez votre numéro de téléphone (ex: 081...) pour le paiement Mobile Money :");
+        if (!phone) return; // Cancelled
+        
         // Update the message in the modal
-        pawapayMessage.innerText = `Préparation de votre paiement de ${amount}$ pour le ${product}.`;
+        pawapayMessage.innerText = `Initialisation du paiement de ${amount}$ pour le ${product}...`;
         
         // Show modal
         pawapayModal.classList.add('active');
         document.body.style.overflow = 'hidden';
         
-        // Simulate API call to Backend to get PawaPay redirect URL
-        // In a real scenario, you would use fetch('/api/pay', { method: 'POST', body: ... })
-        setTimeout(() => {
-            // Fake redirect action (Here you would do window.location.href = data.redirectUrl)
+        // Call our new PHP Backend API
+        fetch('api/payment.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                amount: amount,
+                product: product,
+                phone: phone
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
             pawapayModal.classList.remove('active');
             document.body.style.overflow = '';
-            alert(`[Simulation Backend] Redirection vers l'URL sécurisée de PawaPay pour payer ${amount}$... \n(Nécessite un vrai Backend pour fonctionner)`);
-        }, 2500); // Wait 2.5s to show the loading animation
+            
+            if (data.status === 'success') {
+                alert("✅ " + data.message + "\nTransaction ID: " + data.transactionId);
+            } else {
+                alert("❌ Erreur: " + data.error);
+            }
+        })
+        .catch(error => {
+            pawapayModal.classList.remove('active');
+            document.body.style.overflow = '';
+            alert("Une erreur de communication avec le serveur PHP est survenue.");
+            console.error(error);
+        });
     });
 });
