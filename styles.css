@@ -131,6 +131,12 @@ h1, h2, h3, h4 {
     gap: 8px;
 }
 
+.logo-img {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+}
+
 .nav-links {
     display: flex;
     align-items: center;
