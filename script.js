@@ -127,8 +127,8 @@ pawapayBtns.forEach(btn => {
         pawapayModal.classList.add('active');
         document.body.style.overflow = 'hidden';
         
-        // Call our new PHP Backend API
-        fetch('api/payment.php', {
+        // Call our new Node.js Backend API
+        fetch('api/payment', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -153,7 +153,7 @@ pawapayBtns.forEach(btn => {
         .catch(error => {
             pawapayModal.classList.remove('active');
             document.body.style.overflow = '';
-            alert("Une erreur de communication avec le serveur PHP est survenue.");
+            alert("Une erreur de communication avec le serveur est survenue.");
             console.error(error);
         });
     });
