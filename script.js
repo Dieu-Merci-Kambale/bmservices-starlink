@@ -103,14 +103,7 @@ contactModal.addEventListener('click', (e) => {
     }
 });
 
-// Form submission (prevent default and close)
-document.getElementById('contactForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    alert('Merci pour votre message ! Nous vous contacterons très bientôt.');
-    contactModal.classList.remove('active');
-    document.body.style.overflow = '';
-    e.target.reset();
-});
+
 
 // PawaPay Payment Logic (Simulation)
 const pawapayBtns = document.querySelectorAll('.pawapay-btn');
